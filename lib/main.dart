@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Send Messages',
       debugShowCheckedModeBanner: false,
-      initialRoute: 'home',
+      initialRoute: 'login',
       routes: {
         'login': (_) => const LoginScreen(),
         'home': (_) => const HomeScreen()
