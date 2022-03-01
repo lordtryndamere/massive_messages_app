@@ -52,9 +52,9 @@ class _CustomTable extends StatelessWidget {
             text: 'General',
           ),
           _CustomCardContainer(
-            icon: Icons.bus_alert,
+            icon: Icons.message_outlined,
             color: Color.fromARGB(255, 165, 89, 179),
-            text: 'Transport',
+            text: 'Mensajes',
           )
         ]),
         TableRow(children: [
@@ -100,37 +100,40 @@ class _CustomCardContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-      child: ClipRRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-          child: Container(
-            height: size.height * 0.2,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              color: const Color.fromRGBO(62, 66, 107, 0.7),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  backgroundColor: color,
-                  radius: 35,
-                  child: Icon(
-                    icon,
-                    color: Colors.white.withOpacity(0.7),
-                    size: 30,
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+        child: ClipRRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+            child: Container(
+              height: size.height * 0.2,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                color: const Color.fromRGBO(62, 66, 107, 0.7),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    backgroundColor: color,
+                    radius: 35,
+                    child: Icon(
+                      icon,
+                      color: Colors.white.withOpacity(0.7),
+                      size: 30,
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  text,
-                  style: TextStyle(color: color),
-                )
-              ],
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    text,
+                    style: TextStyle(color: color),
+                  )
+                ],
+              ),
             ),
           ),
         ),
