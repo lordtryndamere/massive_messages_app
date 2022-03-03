@@ -1,17 +1,19 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:massive_messages/providers/login_form_provider.dart';
+import 'package:massive_messages/providers/send_messages_provider.dart';
 import 'package:massive_messages/ui/input_decorations.dart';
 import 'package:massive_messages/widgets/widgets.dart';
+import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class SendMessagesScreen extends StatelessWidget {
+  const SendMessagesScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: AuthBackGround(
-          icon: Icons.person_pin,
+          icon: Icons.message_outlined,
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -23,23 +25,19 @@ class LoginScreen extends StatelessWidget {
                     children: [
                       const SizedBox(height: 10),
                       Text(
-                        'Login',
-                        style: Theme.of(context).textTheme.headline4,
+                        'Mensages Masivos',
+                        style: Theme.of(context).textTheme.headline5,
                       ),
                       const SizedBox(
                         height: 30,
                       ),
                       ChangeNotifierProvider(
-                          create: (_) => LoginFormProvider(),
+                          create: (_) => SendMessagesProvider(),
                           child: const _LoginForm()),
                     ],
                   ),
                 ),
                 const SizedBox(height: 50),
-                const Text(
-                  'Crear una nueva cuenta',
-                  style: TextStyle(fontSize: 18),
-                ),
                 const SizedBox(height: 50),
               ],
             ),
@@ -58,44 +56,40 @@ class _LoginForm extends StatefulWidget {
 class __LoginFormState extends State<_LoginForm> {
   @override
   Widget build(BuildContext context) {
-    final loginform = Provider.of<LoginFormProvider>(context);
+    final loginform = Provider.of<SendMessagesProvider>(context);
+    void openFile(PlatformFile file) {
+      OpenFile.open(file.path);
+    }
+
     return Form(
         key: loginform.formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
           children: [
+            ElevatedButton(
+                onPressed: (() async {
+                  FilePickerResult? result =
+                      await FilePicker.platform.pickFiles();
+                  if (result == null) return;
+                  loginform.file = result.files.first;
+                }),
+                child: const Text('Pick File')),
             TextFormField(
-              onChanged: (value) => loginform.email = value,
+              maxLines: 50,
+              minLines: 1,
+              onChanged: (value) => loginform.message = value,
               autocorrect: false,
-              keyboardType: TextInputType.emailAddress,
+              keyboardType: TextInputType.multiline,
               decoration: InputDecorations.authInputDecoration(
-                  hintText: 'example@gmail.com',
-                  labelText: 'Correo electronico',
-                  prefixIcon: Icons.alternate_email_rounded),
+                  hintText: '',
+                  labelText: 'mensaje..',
+                  prefixIcon: Icons.email),
               validator: (value) {
-                String pattern =
-                    r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                RegExp regExp = RegExp(pattern);
-                return regExp.hasMatch(value ?? '')
-                    ? null
-                    : 'El correo es invalido';
+                if (value != null && value.length >= 6) return null;
+                return 'El mensaje no puede ser vacio..';
               },
             ),
             const SizedBox(height: 30),
-            TextFormField(
-              onChanged: (value) => loginform.password = value,
-              autocorrect: false,
-              obscureText: true,
-              keyboardType: TextInputType.text,
-              decoration: InputDecorations.authInputDecoration(
-                  hintText: '***',
-                  labelText: 'Contraseña',
-                  prefixIcon: Icons.lock_outline),
-              validator: (value) {
-                if (value != null && value.length >= 6) return null;
-                return 'La contraseña debe ser mayor o igual a 6 caracteres';
-              },
-            ),
             const SizedBox(height: 30),
             MaterialButton(
               onPressed: !loginform.isLoading
@@ -106,7 +100,7 @@ class __LoginFormState extends State<_LoginForm> {
                       await Future.delayed(const Duration(seconds: 2));
 
                       loginform.isLoading = false;
-                      Navigator.pushReplacementNamed(context, 'home');
+                      // Navigator.pushReplacementNamed(context, 'home');
                     }
                   : null,
               shape: RoundedRectangleBorder(
@@ -118,7 +112,7 @@ class __LoginFormState extends State<_LoginForm> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
                   child: Text(
-                    loginform.isLoading ? 'espere' : 'ingresar',
+                    loginform.isLoading ? 'espere' : 'Enviar',
                     style: const TextStyle(color: Colors.white),
                   )),
             )

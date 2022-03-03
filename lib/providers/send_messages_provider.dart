@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-class LoginFormProvider extends ChangeNotifier {
+class SendMessagesProvider extends ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey();
-
-  String email = '';
-  String password = '';
+  String message = '';
+  dynamic file;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;

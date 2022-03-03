@@ -2,22 +2,31 @@ import 'package:flutter/material.dart';
 
 class AuthBackGround extends StatelessWidget {
   final Widget child;
-  const AuthBackGround({Key? key, required this.child}) : super(key: key);
+  final IconData icon;
+  const AuthBackGround({Key? key, required this.child, required this.icon})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       height: double.infinity,
-      child: Stack(
-          children: <Widget>[const _PurpleBox(), const _HeaderIcon(), child]),
+      child: Stack(children: <Widget>[
+        const _PurpleBox(),
+        _HeaderIcon(
+          icon: icon,
+        ),
+        child
+      ]),
     );
   }
 }
 
 class _HeaderIcon extends StatelessWidget {
+  final IconData icon;
   const _HeaderIcon({
     Key? key,
+    required this.icon,
   }) : super(key: key);
 
   @override
@@ -26,8 +35,8 @@ class _HeaderIcon extends StatelessWidget {
       child: Container(
         width: double.infinity,
         margin: const EdgeInsets.only(top: 30),
-        child: const Icon(
-          Icons.person_pin,
+        child: Icon(
+          icon,
           color: Colors.white,
           size: 100,
         ),
