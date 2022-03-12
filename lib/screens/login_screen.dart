@@ -61,7 +61,7 @@ class __LoginFormState extends State<_LoginForm> {
     final loginform = Provider.of<LoginFormProvider>(context);
     return Form(
         key: loginform.formKey,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
+        autovalidateMode: AutovalidateMode.always,
         child: Column(
           children: [
             TextFormField(
@@ -92,6 +92,9 @@ class __LoginFormState extends State<_LoginForm> {
                   labelText: 'Contraseña',
                   prefixIcon: Icons.lock_outline),
               validator: (value) {
+                if (loginform.showError) {
+                  return loginform.errorMessage;
+                }
                 if (value != null && value.length >= 6) return null;
                 return 'La contraseña debe ser mayor o igual a 6 caracteres';
               },
@@ -103,10 +106,14 @@ class __LoginFormState extends State<_LoginForm> {
                       FocusScope.of(context).unfocus();
                       if (!loginform.isvalidForm()) return;
                       loginform.isLoading = true;
-                      await Future.delayed(const Duration(seconds: 2));
+                      final connection = await loginform.login(
+                          email: loginform.email, password: loginform.password);
+                      await Future.delayed(const Duration(seconds: 1));
 
                       loginform.isLoading = false;
-                      Navigator.pushReplacementNamed(context, 'home');
+                      if (connection['code'] == 100) {
+                        Navigator.pushReplacementNamed(context, 'home');
+                      }
                     }
                   : null,
               shape: RoundedRectangleBorder(
