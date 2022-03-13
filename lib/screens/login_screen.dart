@@ -73,6 +73,9 @@ class __LoginFormState extends State<_LoginForm> {
                   labelText: 'Correo electronico',
                   prefixIcon: Icons.alternate_email_rounded),
               validator: (value) {
+                if (loginform.showError) {
+                  return loginform.errorMessage;
+                }
                 String pattern =
                     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
                 RegExp regExp = RegExp(pattern);

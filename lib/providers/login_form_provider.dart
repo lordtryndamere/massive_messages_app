@@ -13,6 +13,7 @@ class LoginFormProvider extends ChangeNotifier {
   final String _baseUrl = 'localhost:8080';
   bool _isLoading = false;
   bool showError = false;
+  bool isAuth = false;
   String errorMessage = '';
   bool get isLoading => _isLoading;
 
@@ -34,6 +35,7 @@ class LoginFormProvider extends ChangeNotifier {
     final Map<String, dynamic> result = json.decode(response.body);
     if (result['code'] == 100) {
       await storage.write(key: 'AuthToken', value: result['data']['authToken']);
+      isAuth = true;
       await storage.write(key: 'user', value: result['data']['user']);
       user = result['data']['user'];
     }
