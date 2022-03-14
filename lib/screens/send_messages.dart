@@ -15,7 +15,7 @@ class SendMessagesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: AuthBackGround(
-          icon: Icons.message_outlined,
+          icon: Icons.file_present_rounded,
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -27,7 +27,7 @@ class SendMessagesScreen extends StatelessWidget {
                     children: [
                       const SizedBox(height: 10),
                       Text(
-                        'Mensages Masivos',
+                        'Mensajeria masiva',
                         style: Theme.of(context).textTheme.headline5,
                       ),
                       const SizedBox(
@@ -58,6 +58,7 @@ class _LoginForm extends StatefulWidget {
 class __LoginFormState extends State<_LoginForm> {
   bool isSelected = false;
   String fileName = "";
+  late PlatformFile file;
   @override
   Widget build(BuildContext context) {
     final loginform = Provider.of<SendMessagesProvider>(context);
@@ -74,20 +75,31 @@ class __LoginFormState extends State<_LoginForm> {
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                        const Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Icon(Icons.file_present_rounded,
-                              color: Colors.green),
-                        ),
-                        const SizedBox(width: 10),
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                openFile(file);
+                              });
+                            },
+                            icon: const Icon(Icons.file_present_rounded,
+                                color: Colors.green)),
                         SizedBox(
-                          width: 195,
-                          child: Text(fileName,
-                              softWrap: false,
-                              textAlign: TextAlign.start,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(color: Colors.black)),
+                          width: 180,
+                          child: GestureDetector(
+                            onTap: (() {
+                              setState(() {
+                                openFile(file);
+                              });
+                            }),
+                            child: Text(fileName,
+                                softWrap: false,
+                                textAlign: TextAlign.start,
+                                maxLines: 1,
+                                overflow: TextOverflow.fade,
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold)),
+                          ),
                         ),
                         Expanded(child: Container()),
                         IconButton(
@@ -107,7 +119,9 @@ class __LoginFormState extends State<_LoginForm> {
                           await FilePicker.platform.pickFiles();
                       if (result == null) return;
                       loginform.file = result.files.single.path!;
+
                       setState(() {
+                        file = result.files.first;
                         fileName = result.files.single.name;
                         isSelected = true;
                       });
