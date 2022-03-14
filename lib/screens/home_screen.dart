@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:massive_messages/providers/user_provider.dart';
 import 'package:massive_messages/widgets/background.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -151,21 +153,22 @@ class _CustomTitles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
     return SafeArea(
         child: Container(
       padding: const EdgeInsets.all(15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Text(
-            'Classify transaction',
-            style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+            'Bienvenido  ${userProvider.user['fullName']}',
+            style: const TextStyle(
+                fontSize: 18, fontWeight: FontWeight.w900, color: Colors.white),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
-          Text(
+          const Text(
             'Classify this transaction into a particular category',
             maxLines: 2,
             softWrap: false,

@@ -9,10 +9,11 @@ class LoginFormProvider extends ChangeNotifier {
   final storage = const FlutterSecureStorage();
   String email = '';
   String password = '';
-  dynamic user;
+  late Map<String?, dynamic> user;
   final String _baseUrl = 'localhost:8080';
   bool _isLoading = false;
   bool showError = false;
+  bool isAuth = false;
   String errorMessage = '';
   bool get isLoading => _isLoading;
 
@@ -31,10 +32,12 @@ class LoginFormProvider extends ChangeNotifier {
         },
         body: json.encode({'email': email, 'password': password}));
 
-    final Map<String, dynamic> result = json.decode(response.body);
+    final Map<String?, dynamic> result = json.decode(response.body);
     if (result['code'] == 100) {
       await storage.write(key: 'AuthToken', value: result['data']['authToken']);
-      await storage.write(key: 'user', value: result['data']['user']);
+      isAuth = true;
+      await storage.write(
+          key: 'user', value: json.encode(result['data']['user']));
       user = result['data']['user'];
     }
     receiveMessage(result);
