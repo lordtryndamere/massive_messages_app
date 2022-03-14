@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:massive_messages/providers/send_messages_provider.dart';
@@ -54,6 +56,8 @@ class _LoginForm extends StatefulWidget {
 }
 
 class __LoginFormState extends State<_LoginForm> {
+  bool isSelected = false;
+  String fileName = "";
   @override
   Widget build(BuildContext context) {
     final loginform = Provider.of<SendMessagesProvider>(context);
@@ -66,14 +70,49 @@ class __LoginFormState extends State<_LoginForm> {
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
           children: [
-            ElevatedButton(
-                onPressed: (() async {
-                  FilePickerResult? result =
-                      await FilePicker.platform.pickFiles();
-                  if (result == null) return;
-                  loginform.file = result.files.first;
-                }),
-                child: const Text('Pick File')),
+            isSelected
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                        const Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Icon(Icons.file_present_rounded,
+                              color: Colors.green),
+                        ),
+                        const SizedBox(width: 10),
+                        SizedBox(
+                          width: 195,
+                          child: Text(fileName,
+                              softWrap: false,
+                              textAlign: TextAlign.start,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(color: Colors.black)),
+                        ),
+                        Expanded(child: Container()),
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                isSelected = false;
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.cancel_rounded,
+                              color: Colors.red,
+                            ))
+                      ])
+                : ElevatedButton(
+                    onPressed: (() async {
+                      FilePickerResult? result =
+                          await FilePicker.platform.pickFiles();
+                      if (result == null) return;
+                      loginform.file = result.files.single.path!;
+                      setState(() {
+                        fileName = result.files.single.name;
+                        isSelected = true;
+                      });
+                    }),
+                    child: const Text('Subir archivo')),
             TextFormField(
               maxLines: 50,
               minLines: 1,
@@ -97,7 +136,8 @@ class __LoginFormState extends State<_LoginForm> {
                       FocusScope.of(context).unfocus();
                       if (!loginform.isvalidForm()) return;
                       loginform.isLoading = true;
-                      await Future.delayed(const Duration(seconds: 2));
+                      final connection = await loginform.sendData(
+                          file: loginform.file, message: loginform.message);
 
                       loginform.isLoading = false;
                       // Navigator.pushReplacementNamed(context, 'home');
