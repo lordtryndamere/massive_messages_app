@@ -9,7 +9,7 @@ class LoginFormProvider extends ChangeNotifier {
   final storage = const FlutterSecureStorage();
   String email = '';
   String password = '';
-  late Map<String?, dynamic> user;
+  Map<String?, dynamic> user = {};
   final String _baseUrl = 'localhost:8080';
   bool _isLoading = false;
   bool showError = false;

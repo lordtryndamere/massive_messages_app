@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:massive_messages/providers/send_messages_provider.dart';
@@ -7,6 +5,7 @@ import 'package:massive_messages/ui/input_decorations.dart';
 import 'package:massive_messages/widgets/widgets.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
+import 'package:cool_alert/cool_alert.dart';
 
 class SendMessagesScreen extends StatelessWidget {
   const SendMessagesScreen({Key? key}) : super(key: key);
@@ -58,6 +57,8 @@ class _LoginForm extends StatefulWidget {
 class __LoginFormState extends State<_LoginForm> {
   bool isSelected = false;
   String fileName = "";
+  bool isLoading = false;
+  bool error = false;
   late PlatformFile file;
   @override
   Widget build(BuildContext context) {
@@ -149,12 +150,43 @@ class __LoginFormState extends State<_LoginForm> {
                   ? () async {
                       FocusScope.of(context).unfocus();
                       if (!loginform.isvalidForm()) return;
-                      loginform.isLoading = true;
-                      final connection = await loginform.sendData(
+                      isLoading = true;
+                      if (isLoading) {
+                        CoolAlert.show(
+                          context: context,
+                          type: CoolAlertType.loading,
+                          text: "Enviando mensajes...",
+                        );
+                      }
+                      await loginform.sendData(
                           file: loginform.file, message: loginform.message);
-
-                      loginform.isLoading = false;
-                      // Navigator.pushReplacementNamed(context, 'home');
+                      setState(() {
+                        isLoading = false;
+                        Navigator.of(context).pop();
+                      });
+                      await Future.delayed(const Duration(milliseconds: 200));
+                      if (loginform.showError) {
+                        error = loginform.showError;
+                        CoolAlert.show(
+                          context: context,
+                          type: CoolAlertType.error,
+                          text: loginform.errorMessage,
+                        );
+                      }
+                      if (loginform.responseMessage ==
+                          'Fallaron los envios de algunos mensajes :(') {
+                        CoolAlert.show(
+                          context: context,
+                          type: CoolAlertType.info,
+                          text: loginform.responseMessage,
+                        );
+                      } else {
+                        CoolAlert.show(
+                          context: context,
+                          type: CoolAlertType.success,
+                          text: loginform.responseMessage,
+                        );
+                      }
                     }
                   : null,
               shape: RoundedRectangleBorder(

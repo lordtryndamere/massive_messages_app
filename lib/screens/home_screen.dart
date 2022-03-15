@@ -154,6 +154,7 @@ class _CustomTitles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
+
     return SafeArea(
         child: Container(
       padding: const EdgeInsets.all(15),
@@ -161,7 +162,7 @@ class _CustomTitles extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Bienvenido  ${userProvider.user['fullName']}',
+            'Bienvenido  ${userProvider.user != null ? userProvider.user['fullName'] : 'sin nombre'}',
             style: const TextStyle(
                 fontSize: 18, fontWeight: FontWeight.w900, color: Colors.white),
           ),

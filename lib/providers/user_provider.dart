@@ -7,7 +7,9 @@ class UserProvider extends ChangeNotifier {
   final storage = const FlutterSecureStorage();
   dynamic user;
   dynamic authToken;
-
+  UserProvider() {
+    getUser();
+  }
   void getUser() async {
     if (user != null) return;
     final token = await storage.read(key: 'AuthToken');

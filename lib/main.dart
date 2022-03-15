@@ -18,10 +18,6 @@ class AppState extends StatelessWidget {
         lazy: false,
       ),
       ChangeNotifierProvider(
-        create: (_) => LoginFormProvider(),
-        lazy: true,
-      ),
-      ChangeNotifierProvider(
         create: (_) => UserProvider(),
         lazy: true,
       )
@@ -34,12 +30,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
-    userProvider.getUser();
+    //final userProvider = Provider.of<UserProvider>(context);
+    // userProvider.getUser();
     return MaterialApp(
       title: 'Send Messages',
       debugShowCheckedModeBanner: false,
-      initialRoute: userProvider.user != null ? 'home' : 'login',
+      initialRoute: 'login',
       routes: {
         'login': (_) => const LoginScreen(),
         'home': (_) => const HomeScreen(),

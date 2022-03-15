@@ -17,6 +17,8 @@ class SendMessagesProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   bool showError = false;
+  String responseMessage = '';
+  bool showText = false;
   bool isAuth = false;
   String errorMessage = '';
 
@@ -37,6 +39,9 @@ class SendMessagesProvider extends ChangeNotifier {
           'Content-Type': 'application/json'
         },
         body: json.encode({'file': file, 'message': message}));
+    final Map<String?, dynamic> result = json.decode(response.body);
+    receiveMessage(result);
+    return result;
   }
 
   void receiveMessage(message) async {
@@ -47,6 +52,11 @@ class SendMessagesProvider extends ChangeNotifier {
       showError = false;
       errorMessage = '';
     }
+    showText = true;
+    responseMessage = message['message'];
+    await Future.delayed(const Duration(seconds: 5));
+    showText = false;
+    responseMessage = '';
   }
 
   bool isvalidForm() {
