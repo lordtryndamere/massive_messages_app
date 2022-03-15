@@ -62,4 +62,8 @@ class SendMessagesProvider extends ChangeNotifier {
   bool isvalidForm() {
     return formKey.currentState?.validate() ?? false;
   }
+
+  void resetForm() {
+    return formKey.currentState?.reset();
+  }
 }

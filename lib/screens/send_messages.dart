@@ -151,6 +151,8 @@ class __LoginFormState extends State<_LoginForm> {
                       FocusScope.of(context).unfocus();
                       if (!loginform.isvalidForm()) return;
                       isLoading = true;
+                      loginform.isLoading = true;
+
                       if (isLoading) {
                         CoolAlert.show(
                           context: context,
@@ -165,6 +167,7 @@ class __LoginFormState extends State<_LoginForm> {
                         Navigator.of(context).pop();
                       });
                       await Future.delayed(const Duration(milliseconds: 200));
+                      loginform.isLoading = false;
                       if (loginform.showError) {
                         error = loginform.showError;
                         CoolAlert.show(
@@ -176,17 +179,23 @@ class __LoginFormState extends State<_LoginForm> {
                       if (loginform.responseMessage ==
                           'Fallaron los envios de algunos mensajes :(') {
                         CoolAlert.show(
+                          title: ':(',
                           context: context,
                           type: CoolAlertType.info,
                           text: loginform.responseMessage,
                         );
                       } else {
                         CoolAlert.show(
+                          title: 'Completado!',
                           context: context,
                           type: CoolAlertType.success,
                           text: loginform.responseMessage,
                         );
                       }
+                      loginform.resetForm();
+                      setState(() {
+                        isSelected = false;
+                      });
                     }
                   : null,
               shape: RoundedRectangleBorder(
