@@ -52,11 +52,13 @@ class _CustomTable extends StatelessWidget {
             icon: Icons.pie_chart,
             color: Colors.lightBlue,
             text: 'General',
+            route: '',
           ),
           _CustomCardContainer(
             icon: Icons.bus_alert,
             color: Color.fromARGB(255, 165, 89, 179),
             text: 'Transport',
+            route: '',
           )
         ]),
         TableRow(children: [
@@ -64,23 +66,27 @@ class _CustomTable extends StatelessWidget {
             icon: Icons.shopping_bag,
             color: Color.fromARGB(255, 189, 93, 192),
             text: 'Shopping',
+            route: '',
           ),
           _CustomCardContainer(
             icon: Icons.money,
             color: Color.fromARGB(255, 212, 149, 55),
             text: 'Bills',
+            route: '',
           )
         ]),
         TableRow(children: [
           _CustomCardContainer(
-            icon: Icons.movie_creation,
-            color: Colors.blue,
-            text: 'Entertaiment',
+            icon: Icons.email_outlined,
+            color: Colors.lightBlue,
+            text: 'Messages',
+            route: 'messages',
           ),
           _CustomCardContainer(
             icon: Icons.local_grocery_store,
             color: Colors.lightGreen,
             text: 'Grocery',
+            route: '',
           )
         ]),
       ],
@@ -94,17 +100,19 @@ class _CustomCardContainer extends StatelessWidget {
     required this.icon,
     required this.color,
     required this.text,
+    required this.route,
   }) : super(key: key);
   final IconData icon;
   final Color color;
   final String text;
+  final String route;
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed('messages');
+        route == '' ? null : Navigator.of(context).pushNamed(route);
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
