@@ -12,6 +12,7 @@ class SendMessagesProvider extends ChangeNotifier {
   final storage = const FlutterSecureStorage();
   String message = '';
   String? file;
+  int? position;
   final String _baseUrl = 'localhost:8080';
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -27,7 +28,10 @@ class SendMessagesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future sendData({required String? file, required String message}) async {
+  Future sendData(
+      {required String? file,
+      required String message,
+      required int? position}) async {
     final url = Uri.http(_baseUrl, '/v1/files/massive-messages');
     final token = await storage.read(key: 'AuthToken');
     final bytes = await i_o.File(file!).readAsBytes();
@@ -38,7 +42,8 @@ class SendMessagesProvider extends ChangeNotifier {
           'X-MSM-Auth-Token': token!,
           'Content-Type': 'application/json'
         },
-        body: json.encode({'file': file, 'message': message}));
+        body: json
+            .encode({'file': file, 'message': message, position: position}));
     final Map<String?, dynamic> result = json.decode(response.body);
     receiveMessage(result);
     return result;

@@ -129,6 +129,18 @@ class __LoginFormState extends State<_LoginForm> {
                     }),
                     child: const Text('Subir archivo')),
             TextFormField(
+                autocorrect: false,
+                keyboardType: TextInputType.number,
+                onChanged: (value) => loginform.position = int.parse(value),
+                decoration: InputDecorations.authInputDecoration(
+                    hintText: '',
+                    labelText: 'posicion del archivo ..',
+                    prefixIcon: Icons.format_list_numbered),
+                validator: (value) {
+                  if (value != null && value != '') return null;
+                  return 'La posoción es necesaria..';
+                }),
+            TextFormField(
               maxLines: 50,
               minLines: 1,
               onChanged: (value) => loginform.message = value,
@@ -143,7 +155,7 @@ class __LoginFormState extends State<_LoginForm> {
                 return 'El mensaje no puede ser vacio..';
               },
             ),
-            const SizedBox(height: 30),
+            // const SizedBox(height: 30),
             const SizedBox(height: 30),
             MaterialButton(
               onPressed: !loginform.isLoading
@@ -161,7 +173,9 @@ class __LoginFormState extends State<_LoginForm> {
                         );
                       }
                       await loginform.sendData(
-                          file: loginform.file, message: loginform.message);
+                          file: loginform.file,
+                          message: loginform.message,
+                          position: loginform.position);
                       setState(() {
                         isLoading = false;
                         Navigator.of(context).pop();
