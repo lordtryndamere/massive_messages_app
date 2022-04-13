@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
@@ -12,8 +10,9 @@ class SendMessagesProvider extends ChangeNotifier {
   final storage = const FlutterSecureStorage();
   String message = '';
   String? file;
-  int? position;
-  final String _baseUrl = 'localhost:8080';
+  int? positionPhone;
+  String? positionEmail;
+  final String _baseUrl = 'backend-messages-app.herokuapp.com';
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
@@ -28,11 +27,13 @@ class SendMessagesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future sendData(
-      {required String? file,
-      required String message,
-      required int? position}) async {
-    final url = Uri.http(_baseUrl, '/v1/files/massive-messages');
+  Future sendData({
+    required String? file,
+    required String message,
+    required int? positionPhone,
+    required String? positionEmail,
+  }) async {
+    final url = Uri.https(_baseUrl, '/v1/files/massive-messages');
     final token = await storage.read(key: 'AuthToken');
     final bytes = await i_o.File(file!).readAsBytes();
     file = base64.encode(bytes);
@@ -42,8 +43,12 @@ class SendMessagesProvider extends ChangeNotifier {
           'X-MSM-Auth-Token': token!,
           'Content-Type': 'application/json'
         },
-        body: json
-            .encode({'file': file, 'message': message, position: position}));
+        body: json.encode({
+          'file': file,
+          'message': message,
+          'positionPhone': positionPhone,
+          'positionEmail': positionEmail
+        }));
     final Map<String?, dynamic> result = json.decode(response.body);
     receiveMessage(result);
     return result;

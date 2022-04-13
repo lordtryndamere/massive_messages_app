@@ -16,7 +16,7 @@ class LoginFormProvider extends ChangeNotifier {
   String phoneNumber = '';
 
   Map<String?, dynamic> user = {};
-  final String _baseUrl = 'localhost:8080';
+  final String _baseUrl = 'backend-messages-app.herokuapp.com';
   bool _isLoading = false;
   bool showError = false;
   bool isAuth = false;
@@ -32,7 +32,7 @@ class LoginFormProvider extends ChangeNotifier {
   }
 
   Future login({required String email, required String password}) async {
-    final url = Uri.http(_baseUrl, '/v1/users/login');
+    final url = Uri.https(_baseUrl, '/v1/users/login');
     final token = await storage.read(key: 'AccessToken');
     final response = await http.post(url,
         headers: {

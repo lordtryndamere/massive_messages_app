@@ -131,14 +131,27 @@ class __LoginFormState extends State<_LoginForm> {
             TextFormField(
                 autocorrect: false,
                 keyboardType: TextInputType.number,
-                onChanged: (value) => loginform.position = int.parse(value),
+                onChanged: (value) =>
+                    loginform.positionPhone = int.parse(value),
                 decoration: InputDecorations.authInputDecoration(
                     hintText: '',
-                    labelText: 'posicion del archivo ..',
-                    prefixIcon: Icons.format_list_numbered),
+                    labelText: 'posicion del telefono...',
+                    prefixIcon: Icons.phone_iphone),
                 validator: (value) {
                   if (value != null && value != '') return null;
-                  return 'La posoción es necesaria..';
+                  return 'La posoción  del  telefono es necesaria..';
+                }),
+            TextFormField(
+                autocorrect: false,
+                keyboardType: TextInputType.text,
+                onChanged: (value) => loginform.positionEmail = value,
+                decoration: InputDecorations.authInputDecoration(
+                    hintText: '',
+                    labelText: 'posicion del email...',
+                    prefixIcon: Icons.email_sharp),
+                validator: (value) {
+                  if (value != null && value != '') return null;
+                  return 'La posoción del email  es necesaria..';
                 }),
             TextFormField(
               maxLines: 50,
@@ -149,7 +162,7 @@ class __LoginFormState extends State<_LoginForm> {
               decoration: InputDecorations.authInputDecoration(
                   hintText: '',
                   labelText: 'mensaje..',
-                  prefixIcon: Icons.email),
+                  prefixIcon: Icons.message_sharp),
               validator: (value) {
                 if (value != null && value.length >= 6) return null;
                 return 'El mensaje no puede ser vacio..';
@@ -175,7 +188,8 @@ class __LoginFormState extends State<_LoginForm> {
                       await loginform.sendData(
                           file: loginform.file,
                           message: loginform.message,
-                          position: loginform.position);
+                          positionPhone: loginform.positionPhone,
+                          positionEmail: loginform.positionEmail);
                       setState(() {
                         isLoading = false;
                         Navigator.of(context).pop();
