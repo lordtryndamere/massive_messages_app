@@ -10,6 +10,7 @@ class SendMessagesProvider extends ChangeNotifier {
   final storage = const FlutterSecureStorage();
   String message = '';
   String? file;
+  String? image;
   int? positionPhone;
   String? positionEmail;
   final String _baseUrl = 'backend-messages-app.herokuapp.com';

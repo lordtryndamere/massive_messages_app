@@ -1,5 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:massive_messages/providers/login_form_provider.dart';
+import 'package:flutter/material.dart'
+    show
+        BuildContext,
+        Colors,
+        Key,
+        MaterialApp,
+        StatelessWidget,
+        ThemeData,
+        Widget,
+        runApp;
 import 'package:massive_messages/providers/user_provider.dart';
 import 'package:massive_messages/screens/screens.dart';
 import 'package:massive_messages/service/access_token.dart';

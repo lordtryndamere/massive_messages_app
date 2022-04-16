@@ -56,10 +56,13 @@ class _LoginForm extends StatefulWidget {
 
 class __LoginFormState extends State<_LoginForm> {
   bool isSelected = false;
+  bool isSelectedImage = false;
+  String nameImage = "";
   String fileName = "";
   bool isLoading = false;
   bool error = false;
   late PlatformFile file;
+  late dynamic image;
   @override
   Widget build(BuildContext context) {
     final loginform = Provider.of<SendMessagesProvider>(context);
@@ -83,7 +86,7 @@ class __LoginFormState extends State<_LoginForm> {
                               });
                             },
                             icon: const Icon(Icons.file_present_rounded,
-                                color: Colors.green)),
+                                color: Colors.lightBlue)),
                         SizedBox(
                           width: 180,
                           child: GestureDetector(
@@ -120,14 +123,112 @@ class __LoginFormState extends State<_LoginForm> {
                           await FilePicker.platform.pickFiles();
                       if (result == null) return;
                       loginform.file = result.files.single.path!;
+                      dynamic nameFile = result.files.single.name;
+                      nameFile = nameFile.split('.');
+                      String nameExtension = nameFile[1];
 
-                      setState(() {
-                        file = result.files.first;
-                        fileName = result.files.single.name;
-                        isSelected = true;
-                      });
+                      if (nameExtension == 'xlsx' || nameExtension == 'csv') {
+                        setState(() {
+                          file = result.files.first;
+                          fileName = result.files.single.name;
+                          isSelected = true;
+                        });
+                      } else {
+                        CoolAlert.show(
+                          title: 'Formato de archivo incorrecto',
+                          context: context,
+                          type: CoolAlertType.warning,
+                          text: 'Por favor sube un excel o csv valido',
+                        );
+                      }
                     }),
-                    child: const Text('Subir archivo')),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.upload_sharp),
+                        Expanded(child: Container()),
+                        const Text('Subir archivo'),
+                      ],
+                    )),
+            isSelectedImage
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                openFile(image);
+                              });
+                            },
+                            icon: const Icon(Icons.image_sharp,
+                                color: Colors.green)),
+                        SizedBox(
+                          width: 180,
+                          child: GestureDetector(
+                            onTap: (() {
+                              setState(() {
+                                openFile(image);
+                              });
+                            }),
+                            child: Text(nameImage,
+                                softWrap: false,
+                                textAlign: TextAlign.start,
+                                maxLines: 1,
+                                overflow: TextOverflow.fade,
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                        ),
+                        Expanded(child: Container()),
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                isSelectedImage = false;
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.cancel_rounded,
+                              color: Colors.red,
+                            ))
+                      ])
+                : ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Colors.lightGreen),
+                    onPressed: (() async {
+                      FilePickerResult? result =
+                          await FilePicker.platform.pickFiles();
+                      if (result == null) return;
+                      dynamic nameFile = result.files.single.name;
+                      nameFile = nameFile.split('.');
+                      String nameExtension = nameFile[1];
+                      if (nameExtension == 'jpg' ||
+                          nameExtension == 'jpeg' ||
+                          nameExtension == 'png' ||
+                          nameExtension == 'PNG' ||
+                          nameExtension == 'gif') {
+                        loginform.image = result.files.single.path!;
+                        setState(() {
+                          image = result.files.first;
+                          nameImage = result.files.single.name;
+                          isSelectedImage = true;
+                        });
+                      } else {
+                        CoolAlert.show(
+                          title: 'Formato Incorrecto',
+                          context: context,
+                          type: CoolAlertType.warning,
+                          text:
+                              'Por favor sube una imagen con formato, jpg, jpeg, png or gif.',
+                        );
+                      }
+                    }),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.image),
+                        Expanded(child: Container()),
+                        const Text('Subir imagen'),
+                      ],
+                    )),
+
             TextFormField(
                 autocorrect: false,
                 keyboardType: TextInputType.number,
